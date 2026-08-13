@@ -1,75 +1,75 @@
-# Nuxt Minimal Starter
+# Anemone Purchase Requests
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+A **Purchase Requests** (Purchase Order) application built with **Nuxt 4**, **Vue 3**, **TypeScript**, and **@nuxt/ui**. Cabang (branch) users browse the HO product catalog, build an order cart, and submit a purchase order.
+
+## Tech Stack
+
+- [Nuxt 4](https://nuxt.com) — framework
+- [Vue 3](https://vuejs.org) — UI library
+- [TypeScript](https://www.typescriptlang.org) — typed language
+- [@nuxt/ui v4](https://ui.nuxt.com) — component library (Tailwind CSS v4)
+- [Tailwind CSS v4](https://tailwindcss.com) — styling
+
+## Project Structure
+
+```
+app/
+  assets/css/main.css        # Tailwind + Nuxt UI entry
+  components/
+    ui/                      # reusable primitives (AppHeader, QuantityStepper)
+    order/                   # order feature components (ProductCard, CartSummary, ...)
+  composables/useCart.ts     # cart state, stock clamping, totals
+  data/                      # mock products & order metadata
+  layouts/default.vue        # shared header + container
+  pages/                     # index, order, order-history
+  types/order.ts             # Product, CartItem, PaymentMethod types
+  utils/format.ts            # currency formatting
+```
+
+## Requirements
+
+- [Node.js](https://nodejs.org) 18.20+ / 20.10+ / 22+
+- npm, pnpm, yarn, or bun
 
 ## Setup
 
-Make sure to install dependencies:
+Install dependencies:
 
 ```bash
-# npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
 ## Development Server
 
-Start the development server on `http://localhost:3000`:
+Start the dev server on `http://localhost:3000`:
 
 ```bash
-# npm
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
+
+Pages:
+
+| Route            | Description                          |
+| ---------------- | ------------------------------------ |
+| `/`              | Landing page (Beranda)               |
+| `/order`         | Purchase order form (catalog + cart) |
+| `/order-history` | Order history (placeholder)          |
 
 ## Production
 
-Build the application for production:
+Build for production:
 
 ```bash
-# npm
 npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
 ```
 
-Locally preview production build:
+Preview the production build locally:
 
 ```bash
-# npm
 npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## Notes
+
+- Mock data lives in `app/data/` — replace with real API calls when a backend is available.
+- The primary/brand color is **pink**, configured in `app/app.config.ts`.
