@@ -51,6 +51,12 @@ export function useCart() {
     item.qty = Math.max(1, item.qty - 1);
   }
 
+  function setQty(id: number, qty: number) {
+    const item = cart.value.find((i) => i.id === id);
+    if (!item) return;
+    item.qty = Math.min(Math.max(1, qty), Number.MAX_SAFE_INTEGER);
+  }
+
   return {
     cart,
     subtotal,
@@ -62,5 +68,6 @@ export function useCart() {
     removeItem,
     increment,
     decrement,
+    setQty,
   };
 }
