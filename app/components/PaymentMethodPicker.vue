@@ -4,7 +4,6 @@ import type { PaymentMethod } from "~/types/order";
 const props = defineProps<{
   methods: PaymentMethod[];
   modelValue: string;
-  color?: "primary" | "secondary" | "success" | "info" | "warning" | "error" | "neutral";
 }>();
 
 const emit = defineEmits<{
@@ -21,7 +20,7 @@ const selected = computed({
   <URadioGroup
     v-model="selected"
     :items="methods"
-    :color="color ?? 'primary'"
+    :color="'primary'"
     variant="card"
     class="w-full"
   />

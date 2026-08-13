@@ -3,13 +3,11 @@ import type { NavigationMenuItem } from "@nuxt/ui";
 
 const props = withDefaults(
   defineProps<{
-    title?: string;
     logoAlt?: string;
     logoSrc?: string;
     branchName?: string;
   }>(),
   {
-    title: "",
     logoAlt: "Logo HO",
     logoSrc: "/myanemone-logo.svg",
     branchName: "",
@@ -38,9 +36,6 @@ const navItems = ref<NavigationMenuItem[]>([
       <img :src="props.logoSrc" :alt="props.logoAlt" class="h-8 w-auto" />
     </template>
 
-    <!-- <h1 v-if="props.title" class="text-sm font-semibold sm:text-base">
-      {{ props.title }}
-    </h1> -->
     <UNavigationMenu :items="navItems" />
 
     <template #right>

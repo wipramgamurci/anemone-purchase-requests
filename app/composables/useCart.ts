@@ -39,18 +39,6 @@ export function useCart() {
     cart.value = cart.value.filter((item) => item.id !== id);
   }
 
-  function increment(id: number, stock: number) {
-    const item = cart.value.find((i) => i.id === id);
-    if (!item) return;
-    item.qty = Math.min(item.qty + 1, maxQty(stock));
-  }
-
-  function decrement(id: number) {
-    const item = cart.value.find((i) => i.id === id);
-    if (!item) return;
-    item.qty = Math.max(1, item.qty - 1);
-  }
-
   function setQty(id: number, qty: number) {
     const item = cart.value.find((i) => i.id === id);
     if (!item) return;
@@ -63,11 +51,8 @@ export function useCart() {
     tax,
     shipping,
     total,
-    maxQty,
     addItem,
     removeItem,
-    increment,
-    decrement,
     setQty,
   };
 }
