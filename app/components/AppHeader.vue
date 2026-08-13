@@ -49,7 +49,9 @@ const navItems = ref<NavigationMenuItem[]>([
         class="flex items-center gap-2 rounded-md px-2.5 py-1.5"
       >
         <UIcon name="lucide:store" class="size-4 text-primary" />
-        <span class="text-sm font-medium text-default">{{ props.branchName }}</span>
+        <span class="text-sm font-medium text-default">
+          {{ props.branchName }}
+        </span>
       </div>
     </template>
   </UHeader>
