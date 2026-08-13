@@ -39,6 +39,15 @@ const navItems = ref<NavigationMenuItem[]>([
     <UNavigationMenu :items="navItems" />
 
     <template #body>
+      <div
+        v-if="props.branchName"
+        class="mb-3 flex items-center gap-2 rounded-md px-2.5 py-1.5 lg:hidden"
+      >
+        <UIcon name="lucide:store" class="size-4 text-primary" />
+        <span class="text-sm font-medium text-default">
+          {{ props.branchName }}
+        </span>
+      </div>
       <UNavigationMenu
         :items="navItems"
         orientation="vertical"
@@ -49,7 +58,7 @@ const navItems = ref<NavigationMenuItem[]>([
     <template #right>
       <div
         v-if="props.branchName"
-        class="flex items-center gap-2 rounded-md px-2.5 py-1.5"
+        class="hidden items-center gap-2 rounded-md px-2.5 py-1.5 lg:flex"
       >
         <UIcon name="lucide:store" class="size-4 text-primary" />
         <span class="text-sm font-medium text-default">
