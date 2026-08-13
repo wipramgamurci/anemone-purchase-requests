@@ -1,7 +1,12 @@
 <script setup lang="ts">
+import { formatRp } from "~/utils/format";
+import { useCart } from "~/composables/useCart";
+
 useSeoMeta({
   title: "Order Cabang - Outlet Denpasar Utara II",
 });
+
+const { cart, subtotal, tax, shipping, total, addItem, removeItem } = useCart();
 
 const products = ref([
   {
@@ -32,11 +37,6 @@ const products = ref([
 
 const qty = ref<Record<number, number>>({ 1: 1, 2: 1, 3: 1 });
 
-const cart = ref([
-  { id: 1, name: "Modul Calistung Level 1", price: 20000, qty: 20 },
-  { id: 3, name: "Tas Desain Terbaru", price: 100000, qty: 1 },
-]);
-
 const paymentMethods = ref([
   {
     label: "Transfer Bank",
@@ -53,38 +53,8 @@ const paymentMethods = ref([
 ]);
 const paymentMethod = ref("bank");
 
-const subtotal = computed(() =>
-  cart.value.reduce((sum, item) => sum + item.price * item.qty, 0),
-);
-const tax = computed(() => Math.round(subtotal.value * 0.11));
-const shipping = 50000;
-const total = computed(() => subtotal.value + tax.value + shipping);
-
-const formatRp = (value: number) => `Rp ${value.toLocaleString("id-ID")}`;
-
-function changeQty(id: number, delta: number) {
-  const next = (qty.value[id] ?? 1) + delta;
-  qty.value[id] = Math.max(1, next);
-}
-
-function addToCart(product: { id: number; name: string; price: number }) {
-  const existing = cart.value.find((item) => item.id === product.id);
-  if (existing) {
-    existing.qty += qty.value[product.id] ?? 1;
-  } else {
-    cart.value.push({ ...product, qty: qty.value[product.id] ?? 1 });
-  }
-}
-
-function changeCartQty(id: number, delta: number) {
-  const item = cart.value.find((i) => i.id === id);
-  if (!item) return;
-  item.qty = Math.max(1, item.qty + delta);
-}
-
-function removeFromCart(id: number) {
-  cart.value = cart.value.filter((item) => item.id !== id);
-}
+const stockOf = (id: number) =>
+  products.value.find((p) => p.id === id)?.stock ?? 0;
 
 const submitting = ref(false);
 async function submitOrder() {
@@ -160,40 +130,21 @@ async function submitOrder() {
               </p>
 
               <div class="mt-auto flex items-center gap-2">
-                <div
-                  class="flex items-center rounded-md ring ring-inset ring-accented"
-                >
-                  <UButton
-                    icon="lucide:minus"
-                    color="neutral"
-                    variant="ghost"
-                    size="sm"
-                    square
-                    class="rounded-s-md"
-                    :disabled="!product.available"
-                    @click="changeQty(product.id, -1)"
-                  />
-                  <span class="w-8 text-center text-sm font-semibold">
-                    {{ qty[product.id] }}
-                  </span>
-                  <UButton
-                    icon="lucide:plus"
-                    color="neutral"
-                    variant="ghost"
-                    size="sm"
-                    square
-                    class="rounded-e-md"
-                    :disabled="!product.available"
-                    @click="changeQty(product.id, 1)"
-                  />
-                </div>
+                <UInputNumber
+                  v-model="qty[product.id]"
+                  :min="1"
+                  :max="product.stock"
+                  size="sm"
+                  class="w-24"
+                  :disabled="!product.available"
+                />
 
                 <UButton
                   class="flex-1 cursor-pointer"
                   color="primary"
                   icon="lucide:shopping-cart"
                   :disabled="!product.available"
-                  @click="addToCart(product)"
+                  @click="addItem(product, qty[product.id] ?? 1)"
                 >
                   {{ product.available ? "Keranjang" : "Stok Tidak Tersedia" }}
                 </UButton>
@@ -240,31 +191,13 @@ async function submitOrder() {
                   </p>
                 </div>
                 <div class="flex items-center gap-1">
-                  <div
-                    class="flex items-center rounded-md ring ring-inset ring-accented"
-                  >
-                    <UButton
-                      icon="lucide:minus"
-                      color="neutral"
-                      variant="ghost"
-                      size="xs"
-                      square
-                      class="rounded-s-md"
-                      @click="changeCartQty(item.id, -1)"
-                    />
-                    <span class="w-6 text-center text-xs font-semibold">
-                      {{ item.qty }}
-                    </span>
-                    <UButton
-                      icon="lucide:plus"
-                      color="neutral"
-                      variant="ghost"
-                      size="xs"
-                      square
-                      class="rounded-e-md"
-                      @click="changeCartQty(item.id, 1)"
-                    />
-                  </div>
+                  <UInputNumber
+                    v-model="item.qty"
+                    :min="1"
+                    :max="stockOf(item.id)"
+                    size="sm"
+                    class="w-22"
+                  />
                   <UButton
                     icon="lucide:trash-2"
                     color="error"
@@ -272,7 +205,7 @@ async function submitOrder() {
                     size="xs"
                     square
                     aria-label="Hapus item"
-                    @click="removeFromCart(item.id)"
+                    @click="removeItem(item.id)"
                   />
                 </div>
               </div>
