@@ -18,3 +18,9 @@ export interface PaymentMethod {
   label: string;
   value: string;
 }
+
+export interface Expedition {
+  id: string;
+  label: string;
+  cost: number;
+}
