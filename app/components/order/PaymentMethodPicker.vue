@@ -21,7 +21,6 @@ const selected = computed({
     v-model="selected"
     :items="methods"
     :color="'primary'"
-    variant="card"
     class="w-full"
   />
 </template>

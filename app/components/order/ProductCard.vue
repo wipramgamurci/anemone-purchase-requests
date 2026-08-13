@@ -51,8 +51,8 @@ function add() {
     </div>
 
     <p
-      class="font-bold text-highlighted"
-      :class="{ 'text-dimmed': !product.available }"
+      class="font-bold"
+      :class="product.available ? 'text-highlighted' : 'text-dimmed'"
     >
       {{ formatRp(product.price) }}
       <span class="text-xs font-normal text-muted">/ pcs</span>
@@ -64,11 +64,11 @@ function add() {
         v-model="qty"
         :min="1"
         :max="product.stock"
-        class="w-24"
+        class="flex-1"
       />
 
       <UButton
-        class="flex-1 cursor-pointer"
+        class="flex-1 justify-center cursor-pointer"
         :color="product.available ? 'primary' : 'neutral'"
         :icon="product.available ? 'lucide:shopping-cart' : 'lucide:ban'"
         :disabled="!product.available"
