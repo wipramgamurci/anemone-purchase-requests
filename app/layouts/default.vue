@@ -4,7 +4,7 @@ const branchName = "Outlet Denpasar Utara II";
 
 <template>
   <div class="min-h-screen">
-    <AppHeader :branch-name="branchName" />
+    <UiAppHeader :branch-name="branchName" />
     <UContainer class="py-6">
       <slot />
     </UContainer>

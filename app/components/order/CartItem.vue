@@ -32,7 +32,7 @@ const stepper = computed({
       </p>
     </div>
     <div class="flex items-center gap-1">
-      <QuantityStepper
+      <UiQuantityStepper
         v-model="stepper"
         :min="1"
         :max="max ?? Infinity"

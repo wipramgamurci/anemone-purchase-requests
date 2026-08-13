@@ -42,7 +42,7 @@ defineEmits<{
     </div>
 
     <div v-else class="divide-y divide-default">
-      <CartItem
+      <OrderCartItem
         v-for="item in items"
         :key="item.id"
         :item="item"
@@ -69,15 +69,15 @@ defineEmits<{
         class="flex items-center justify-between border-t border-default pt-4"
       >
         <span class="font-bold text-highlighted">Total Tagihan</span>
-        <span class="text-xl font-bold text-primary">{{ formatRp(total) }}</span>
+        <span class="text-xl font-bold text-primary">{{
+          formatRp(total)
+        }}</span>
       </div>
     </div>
 
     <div>
-      <p class="mb-2 text-sm font-semibold text-default">
-        Metode Pembayaran
-      </p>
-      <PaymentMethodPicker
+      <p class="mb-2 text-sm font-semibold text-default">Metode Pembayaran</p>
+      <OrderPaymentMethodPicker
         :methods="paymentMethods"
         :model-value="paymentMethod"
         @update:model-value="$emit('update:paymentMethod', $event)"

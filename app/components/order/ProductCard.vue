@@ -18,10 +18,7 @@ function add() {
 </script>
 
 <template>
-  <UCard
-    class="flex flex-col"
-    :ui="{ body: 'flex flex-col flex-1 gap-3' }"
-  >
+  <UCard class="flex flex-col" :ui="{ body: 'flex flex-col flex-1 gap-3' }">
     <div
       class="flex h-36 items-center justify-center rounded-lg bg-linear-to-br text-white"
       :class="product.available ? product.color : 'from-muted to-elevated'"
@@ -41,9 +38,7 @@ function add() {
     </h3>
 
     <div class="flex items-center gap-2 text-xs">
-      <span class="text-muted">
-        Stok HO: {{ product.stock }} pcs
-      </span>
+      <span class="text-muted"> Stok HO: {{ product.stock }} pcs </span>
       <UBadge
         v-if="product.available"
         color="success"
@@ -52,18 +47,19 @@ function add() {
       >
         Tersedia
       </UBadge>
-      <UBadge v-else color="error" variant="subtle" size="sm">
-        Habis
-      </UBadge>
+      <UBadge v-else color="error" variant="subtle" size="sm"> Habis </UBadge>
     </div>
 
-    <p class="font-bold text-highlighted" :class="{ 'text-dimmed': !product.available }">
+    <p
+      class="font-bold text-highlighted"
+      :class="{ 'text-dimmed': !product.available }"
+    >
       {{ formatRp(product.price) }}
       <span class="text-xs font-normal text-muted">/ pcs</span>
     </p>
 
     <div class="mt-auto flex items-center gap-2">
-      <QuantityStepper
+      <UiQuantityStepper
         v-if="product.available"
         v-model="qty"
         :min="1"

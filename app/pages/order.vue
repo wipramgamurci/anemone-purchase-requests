@@ -36,7 +36,7 @@ async function submitOrder() {
   <div class="grid gap-6 lg:grid-cols-3">
     <section class="lg:col-span-2" aria-label="Katalog Produk">
       <div class="grid gap-4 sm:grid-cols-2">
-        <ProductCard
+        <OrderProductCard
           v-for="product in products"
           :key="product.id"
           :product="product"
@@ -46,7 +46,7 @@ async function submitOrder() {
     </section>
 
     <section aria-label="Ringkasan Pesanan">
-      <CartSummary
+      <OrderCartSummary
         :items="cart"
         :subtotal="subtotal"
         :tax="tax"
@@ -70,7 +70,7 @@ async function submitOrder() {
             :title="stockError"
           />
         </template>
-      </CartSummary>
+      </OrderCartSummary>
     </section>
   </div>
 </template>
