@@ -35,8 +35,6 @@ const products = ref([
   },
 ]);
 
-const qty = ref<Record<number, number>>({ 1: 1, 2: 1, 3: 1 });
-
 const paymentMethods = ref([
   {
     label: "Transfer Bank",
@@ -76,65 +74,12 @@ async function submitOrder() {
       <div class="grid gap-6 lg:grid-cols-3">
         <section class="lg:col-span-2">
           <div class="grid gap-4 sm:grid-cols-2">
-            <UCard
+            <ProductCard
               v-for="product in products"
               :key="product.id"
-              class="flex flex-col"
-              :ui="{ body: 'flex flex-col flex-1 gap-3' }"
-            >
-              <div
-                class="flex h-36 items-center justify-center rounded-lg bg-linear-to-br text-white"
-                :class="product.color"
-              >
-                <UIcon name="lucide:package" class="size-14 opacity-80" />
-              </div>
-
-              <h3 class="font-semibold text-default">
-                {{ product.name }}
-              </h3>
-
-              <div class="flex items-center gap-2 text-xs">
-                <span class="text-muted">
-                  Stok HO: {{ product.stock }} pcs
-                </span>
-                <UBadge
-                  v-if="product.available"
-                  color="success"
-                  variant="subtle"
-                  size="sm"
-                >
-                  Tersedia
-                </UBadge>
-                <UBadge v-else color="error" variant="subtle" size="sm">
-                  Habis
-                </UBadge>
-              </div>
-
-              <p class="font-bold text-highlighted">
-                {{ formatRp(product.price) }}
-                <span class="text-xs font-normal text-muted">/ pcs</span>
-              </p>
-
-              <div class="mt-auto flex items-center gap-2">
-                <QuantityStepper
-                  v-model="qty[product.id]"
-                  :min="1"
-                  :max="product.stock"
-                  class="w-24"
-                  :disabled="!product.available"
-                />
-
-                <UButton
-                  class="flex-1 cursor-pointer"
-                  color="primary"
-                  icon="lucide:shopping-cart"
-                  :disabled="!product.available"
-                  @click="addItem(product, qty[product.id] ?? 1)"
-                >
-                  {{ product.available ? "Keranjang" : "Stok Tidak Tersedia" }}
-                </UButton>
-              </div>
-            </UCard>
+              :product="product"
+              @add="(product, qty) => addItem(product, qty)"
+            />
           </div>
         </section>
 
