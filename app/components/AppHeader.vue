@@ -38,6 +38,14 @@ const navItems = ref<NavigationMenuItem[]>([
 
     <UNavigationMenu :items="navItems" />
 
+    <template #body>
+      <UNavigationMenu
+        :items="navItems"
+        orientation="vertical"
+        class="-mx-2.5"
+      />
+    </template>
+
     <template #right>
       <div
         v-if="props.branchName"
