@@ -54,8 +54,23 @@ const paymentMethod = ref("bank");
 const stockOf = (id: number) =>
   products.value.find((p) => p.id === id)?.stock ?? 0;
 
+const setQty = (id: number, qty: number) => {
+  const item = cart.value.find((i) => i.id === id);
+  if (item) item.qty = qty;
+};
+
 const submitting = ref(false);
+const stockError = ref("");
+
 async function submitOrder() {
+  const overStock = cart.value.find(
+    (item) => item.qty > stockOf(item.id),
+  );
+  if (overStock) {
+    stockError.value = `Stok "${overStock.name}" tidak mencukupi. Maksimal ${stockOf(overStock.id)} pcs.`;
+    return;
+  }
+  stockError.value = "";
   submitting.value = true;
   await new Promise((resolve) => setTimeout(resolve, 800));
   submitting.value = false;
@@ -84,115 +99,31 @@ async function submitOrder() {
         </section>
 
         <section>
-          <UCard :ui="{ body: 'flex flex-col gap-4' }">
-            <template #header>
-              <div class="flex items-center gap-2">
-                <UIcon
-                  name="lucide:shopping-cart"
-                  class="size-5 text-primary"
-                />
-                <h2 class="font-bold text-highlighted">Ringkasan Pesanan</h2>
-                <UBadge color="primary" variant="subtle" size="sm">
-                  {{ cart.length }} Produk
-                </UBadge>
-              </div>
-            </template>
-
-            <div v-if="cart.length === 0" class="text-center text-muted">
-              <UIcon name="lucide:package-open" class="mx-auto size-10 mb-2" />
-              <p class="text-sm">Keranjang kosong</p>
-            </div>
-
-            <div v-else class="divide-y divide-default">
-              <div
-                v-for="item in cart"
-                :key="item.id"
-                class="flex items-start justify-between gap-3 py-3"
-              >
-                <div class="min-w-0">
-                  <p class="truncate font-medium text-default">
-                    {{ item.name }}
-                  </p>
-                  <p class="text-xs text-muted">
-                    {{ item.qty }} x {{ formatRp(item.price) }}
-                  </p>
-                  <p class="mt-1 font-bold text-highlighted">
-                    {{ formatRp(item.price * item.qty) }}
-                  </p>
-                </div>
-                <div class="flex items-center gap-1">
-                  <QuantityStepper
-                    v-model="item.qty"
-                    :min="1"
-                    :max="stockOf(item.id)"
-                    class="w-22"
-                  />
-                  <UButton
-                    icon="lucide:trash-2"
-                    color="error"
-                    variant="ghost"
-                    size="xs"
-                    square
-                    aria-label="Hapus item"
-                    @click="removeItem(item.id)"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="space-y-2 border-t border-default pt-4 text-sm">
-              <div class="flex justify-between">
-                <span class="text-muted">Subtotal</span>
-                <span class="font-medium text-default">{{
-                  formatRp(subtotal)
-                }}</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-muted">Tax (11%)</span>
-                <span class="font-medium text-default">{{
-                  formatRp(tax)
-                }}</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-muted">Est. Ongkir (JNR)</span>
-                <span class="font-medium text-default">{{
-                  formatRp(shipping)
-                }}</span>
-              </div>
-              <div
-                class="flex items-center justify-between border-t border-default pt-4"
-              >
-                <span class="font-bold text-highlighted">Total Tagihan</span>
-                <span class="text-xl font-bold text-primary">{{
-                  formatRp(total)
-                }}</span>
-              </div>
-            </div>
-
-            <div>
-              <p class="mb-2 text-sm font-semibold text-default">
-                Metode Pembayaran
-              </p>
-              <URadioGroup
-                :items="paymentMethods"
-                v-model="paymentMethod"
-                color="primary"
-                variant="card"
-                class="w-full"
+          <CartSummary
+            :items="cart"
+            :subtotal="subtotal"
+            :tax="tax"
+            :shipping="shipping"
+            :total="total"
+            :payment-methods="paymentMethods"
+            :payment-method="paymentMethod"
+            :submitting="submitting"
+            :max-of="stockOf"
+            @remove="removeItem"
+            @update:qty="setQty"
+            @update:payment-method="paymentMethod = $event"
+            @submit="submitOrder"
+          >
+            <template #alert>
+              <UAlert
+                v-if="stockError"
+                color="error"
+                variant="subtle"
+                icon="lucide:alert-circle"
+                :title="stockError"
               />
-            </div>
-
-            <UButton
-              block
-              size="lg"
-              class="cursor-pointer font-bold"
-              :loading="submitting"
-              :disabled="cart.length === 0"
-              @click="submitOrder"
-            >
-              Submit Order / Bayar
-            </UButton>
-          </UCard>
+            </template>
+          </CartSummary>
         </section>
       </div>
     </UContainer>
