@@ -66,21 +66,7 @@ async function submitOrder() {
 
 <template>
   <div class="min-h-screen">
-    <UHeader>
-      <template #title>
-        <img src="/myanemone-logo.svg" class="h-8 w-auto" alt="Logo HO" />
-      </template>
-
-      <h1 class="text-sm font-semibold sm:text-base">
-        Aplikasi Order Cabang - Outlet Denpasar Utara II
-      </h1>
-
-      <template #right>
-        <UButton class="cursor-pointer" color="secondary" variant="link">
-          Riwayat Order
-        </UButton>
-      </template>
-    </UHeader>
+    <AppHeader title="Aplikasi Order Cabang - Outlet Denpasar Utara II" />
 
     <UContainer class="py-6">
       <UPageHeader
@@ -130,11 +116,10 @@ async function submitOrder() {
               </p>
 
               <div class="mt-auto flex items-center gap-2">
-                <UInputNumber
+                <QuantityStepper
                   v-model="qty[product.id]"
                   :min="1"
                   :max="product.stock"
-                  size="sm"
                   class="w-24"
                   :disabled="!product.available"
                 />
@@ -191,11 +176,10 @@ async function submitOrder() {
                   </p>
                 </div>
                 <div class="flex items-center gap-1">
-                  <UInputNumber
+                  <QuantityStepper
                     v-model="item.qty"
                     :min="1"
                     :max="stockOf(item.id)"
-                    size="sm"
                     class="w-22"
                   />
                   <UButton
