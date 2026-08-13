@@ -39,10 +39,10 @@ export function useCart() {
     cart.value = cart.value.filter((item) => item.id !== id);
   }
 
-  function setQty(id: number, qty: number) {
+  function setQty(id: number, qty: number, max = Number.MAX_SAFE_INTEGER) {
     const item = cart.value.find((i) => i.id === id);
     if (!item) return;
-    item.qty = Math.min(Math.max(1, qty), Number.MAX_SAFE_INTEGER);
+    item.qty = Math.min(Math.max(1, qty), Math.max(1, max));
   }
 
   return {

@@ -16,18 +16,36 @@ const stockOf = (id: number) => products.find((p) => p.id === id)?.stock ?? 0;
 
 const submitting = ref(false);
 const stockError = ref("");
+const orderSuccess = ref(false);
+const stockErrorVisible = ref(false);
+const orderSuccessVisible = ref(false);
 
 async function submitOrder() {
   const overStock = cart.value.find((item) => item.qty > stockOf(item.id));
   if (overStock) {
+    orderSuccess.value = false;
+    orderSuccessVisible.value = false;
     stockError.value = `Stok "${overStock.name}" tidak mencukupi. Maksimal ${stockOf(overStock.id)} pcs.`;
+    stockErrorVisible.value = true;
     return;
   }
   stockError.value = "";
+  stockErrorVisible.value = false;
   submitting.value = true;
-  await new Promise((resolve) => setTimeout(resolve, 800));
+  await new Promise((resolve) => setTimeout(resolve, 3000));
   submitting.value = false;
+  orderSuccess.value = true;
+  orderSuccessVisible.value = true;
 }
+
+watchEffect(() => {
+  if (cart.value.length === 0) {
+    orderSuccess.value = false;
+    stockError.value = "";
+    stockErrorVisible.value = false;
+    orderSuccessVisible.value = false;
+  }
+});
 </script>
 
 <template>
@@ -35,6 +53,7 @@ async function submitOrder() {
 
   <div class="grid gap-6 lg:grid-cols-3">
     <section class="lg:col-span-2" aria-label="Katalog Produk">
+      <h2 class="mb-4 text-lg font-bold text-highlighted">Katalog Produk</h2>
       <div class="grid gap-4 sm:grid-cols-2">
         <OrderProductCard
           v-for="product in products"
@@ -57,17 +76,29 @@ async function submitOrder() {
         :submitting="submitting"
         :max-of="stockOf"
         @remove="removeItem"
-        @update:qty="setQty"
+        @update:qty="(id, qty, max) => setQty(id, qty, max)"
         @update:payment-method="paymentMethod = $event"
         @submit="submitOrder"
       >
         <template #alert>
           <UAlert
-            v-if="stockError"
+            v-if="stockErrorVisible"
+            v-model:open="stockErrorVisible"
             color="error"
             variant="subtle"
             icon="lucide:alert-circle"
+            close
             :title="stockError"
+          />
+          <UAlert
+            v-else-if="orderSuccessVisible"
+            v-model:open="orderSuccessVisible"
+            color="success"
+            variant="subtle"
+            icon="lucide:check-circle"
+            close
+            title="Order berhasil dikirim!"
+            description="Pesanan Anda sedang diproses oleh Head Office."
           />
         </template>
       </OrderCartSummary>

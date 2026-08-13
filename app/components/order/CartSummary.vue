@@ -16,7 +16,7 @@ defineProps<{
 
 defineEmits<{
   remove: [id: number];
-  "update:qty": [id: number, qty: number];
+  "update:qty": [id: number, qty: number, max: number | undefined];
   "update:paymentMethod": [value: string];
   submit: [];
 }>();
@@ -48,7 +48,7 @@ defineEmits<{
         :item="item"
         :max="maxOf?.(item.id)"
         @remove="$emit('remove', $event)"
-        @update:qty="(id, qty) => $emit('update:qty', id, qty)"
+        @update:qty="(id, qty) => $emit('update:qty', id, qty, maxOf?.(id))"
       />
     </div>
 
