@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useCart } from "~/composables/useCart";
 import { products } from "~/data/products";
-import { orderMeta, outletName, pageTitle, paymentMethods } from "~/data/order";
+import { orderMeta, pageTitle, paymentMethods } from "~/data/order";
 
 useSeoMeta({
   title: orderMeta.title,
@@ -40,11 +40,7 @@ async function submitOrder() {
 </script>
 
 <template>
-  <div class="min-h-screen">
-    <AppHeader :title="outletName" />
-
-    <UContainer class="py-6">
-      <UPageHeader :title="pageTitle" class="mb-6" />
+  <UPageHeader :title="pageTitle" class="mb-6" />
 
       <div class="grid gap-6 lg:grid-cols-3">
         <section class="lg:col-span-2" aria-label="Katalog Produk">
@@ -86,6 +82,4 @@ async function submitOrder() {
           </CartSummary>
         </section>
       </div>
-    </UContainer>
-  </div>
 </template>
