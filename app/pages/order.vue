@@ -1,14 +1,29 @@
 <script setup lang="ts">
 import { useCart } from "~/composables/useCart";
 import { products } from "~/data/products";
-import { orderMeta, pageTitle, paymentMethods } from "~/data/order";
+import {
+  orderMeta,
+  pageTitle,
+  paymentMethods,
+  expeditions,
+} from "~/data/order";
 
 useSeoMeta({
   title: orderMeta.title,
 });
 
-const { cart, subtotal, tax, shipping, total, addItem, removeItem, setQty } =
-  useCart();
+const {
+  cart,
+  subtotal,
+  tax,
+  shipping,
+  total,
+  expeditionId,
+  setExpedition,
+  addItem,
+  removeItem,
+  setQty,
+} = useCart();
 
 const paymentMethod = ref("bank");
 
@@ -73,11 +88,14 @@ watchEffect(() => {
         :total="total"
         :payment-methods="paymentMethods"
         :payment-method="paymentMethod"
+        :expeditions="expeditions"
+        :expedition-id="expeditionId"
         :submitting="submitting"
         :max-of="stockOf"
         @remove="removeItem"
         @update:qty="(id, qty, max) => setQty(id, qty, max)"
         @update:payment-method="paymentMethod = $event"
+        @update:expedition="setExpedition"
         @submit="submitOrder"
       >
         <template #alert>

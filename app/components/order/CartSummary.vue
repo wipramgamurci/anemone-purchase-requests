@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { CartItem, PaymentMethod } from "~/types/order";
+import type { CartItem, Expedition, PaymentMethod } from "~/types/order";
 import { formatRp } from "~/utils/format";
 
-defineProps<{
+const props = defineProps<{
   items: CartItem[];
   subtotal: number;
   tax: number;
@@ -10,6 +10,8 @@ defineProps<{
   total: number;
   paymentMethods: PaymentMethod[];
   paymentMethod: string;
+  expeditions: Expedition[];
+  expeditionId: string;
   submitting?: boolean;
   maxOf?: (id: number) => number | undefined;
 }>();
@@ -18,8 +20,12 @@ defineEmits<{
   remove: [id: number];
   "update:qty": [id: number, qty: number, max: number | undefined];
   "update:paymentMethod": [value: string];
+  "update:expedition": [value: string];
   submit: [];
 }>();
+
+const expeditionLabel = (id: string) =>
+  props.expeditions.find((e) => e.id === id)?.label;
 </script>
 
 <template>
@@ -62,7 +68,9 @@ defineEmits<{
         <span class="font-medium text-default">{{ formatRp(tax) }}</span>
       </div>
       <div class="flex justify-between">
-        <span class="text-muted">Est. Ongkir (JNR)</span>
+        <span class="text-muted">
+          Est. Ongkir ({{ expeditionLabel(expeditionId) }})
+        </span>
         <span class="font-medium text-default">{{ formatRp(shipping) }}</span>
       </div>
       <div
@@ -73,6 +81,17 @@ defineEmits<{
           formatRp(total)
         }}</span>
       </div>
+    </div>
+
+    <div>
+      <p class="mb-2 text-sm font-semibold text-default">
+        Ekspedisi Pengiriman
+      </p>
+      <OrderExpeditionPicker
+        :expeditions="expeditions"
+        :model-value="expeditionId"
+        @update:model-value="$emit('update:expedition', $event)"
+      />
     </div>
 
     <div>
